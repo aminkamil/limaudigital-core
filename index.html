@@ -171,7 +171,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycby5lYpjD751Ydm1zNSqJOAvkUZrDujPxatlyJwFuOlopkQ-laQ436XpGIWxTVhbenb5/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbymTLfAkDZGGpTi4mpFK7FXaI1PFjypgOvu0auw14TW2VI_YwD5I9GIBJLAKMzE_gvX/exec';
 
         function showLoader(show) { document.getElementById('loading-spinner').classList.toggle('hidden', !show); }
         
@@ -179,12 +179,26 @@
             showLoader(true);
             const token = localStorage.getItem('core_session_token');
             try {
+                console.log('=== API CALL ===');
+                console.log('Action:', action);
+                console.log('URL:', API_URL);
+                
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({ action, params: { ...params, token } })
                 });
+                
+                console.log('Response status:', response.status);
+                console.log('Response OK:', response.ok);
+                
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+                }
+                
                 const result = await response.json();
+                console.log('Result:', result);
+                
                 showLoader(false);
                 if (!result.success) {
                     if (result.error === 'Session expired') { logout(); return null; }
@@ -194,7 +208,8 @@
                 return result.data;
             } catch (error) {
                 showLoader(false);
-                alert('API Error: ' + error.message);
+                console.error('API Error:', error);
+                alert('API Error: ' + error.message + '\n\nCheck browser console for details (F12)');
                 return null;
             }
         }
