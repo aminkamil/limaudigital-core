@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>limaudigital core DENGAN GEMINI AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/25c294f3631fb5a0c1ef659a85cabdcf?family=Sifonn-Pro" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; -webkit-font-smoothing: antialiased; }
+        .brand-sifonn { font-family: "Sifonn-Pro", sans-serif; text-transform: lowercase; letter-spacing: 0px; }
+        .unit-card { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 32px; position: relative; overflow: hidden; transition: all 0.4s; }
+        .unit-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(234, 88, 12, 0.25); }
+        .hidden-section { display: none !important; }
+        .loader { border-top-color: #f97316; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .modal.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: white; width: 90%; max-width: 500px; border-radius: 24px; padding: 2rem; transform: translateY(20px); transition: transform 0.3s; }
+        .modal.active .modal-content { transform: translateY(0); }
+        .gemini-gradient { background: linear-gradient(90deg, #4285F4 0%, #9B72CB 50%, #D96570 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body>
+    <div id="loading-spinner" class="fixed inset-0 z-[100] flex items-center justify-center bg-white/80 backdrop-blur-sm hidden">
+        <div class="loader w-12 h-12 border-4 border-slate-200 rounded-full"></div>
+    </div>
+
+    <div id="login-section" class="fixed inset-0 z-[60] bg-slate-50 flex items-center justify-center px-6">
+        <div class="max-w-md w-full">
+            <div class="text-center mb-10">
+                <h1 class="brand-sifonn text-6xl font-bold mb-4"><span style="color: #f90000;">limau</span><span style="color: #0832f4;">digital</span> <span class="text-2xl text-slate-500">CORE</span></h1>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-2xl">
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-black text-slate-500 uppercase mb-2">Username</label>
+                        <input type="text" id="login-username" required class="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-orange-500 outline-none font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-500 uppercase mb-2">Password</label>
+                        <input type="password" id="login-password" required class="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-orange-500 outline-none font-bold">
+                    </div>
+                    <button type="submit" class="w-full py-5 font-black uppercase rounded-2xl bg-[#0f172a] text-white hover:bg-[#f97316] transition-all">Log Masuk</button>
+                </form>
+                <p id="login-error" class="mt-4 text-center text-xs font-bold text-red-500 hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-content" class="hidden">
+        <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b px-8 py-5">
+            <div class="flex justify-between items-center">
+                <div class="cursor-pointer" onclick="kembaliKeMenuUtama()">
+                    <h1 class="brand-sifonn text-3xl font-bold"><span style="color: #f90000;">limau</span><span style="color: #0832f4;">digital</span> <span class="text-xs text-slate-500">CORE</span></h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p id="user-role-display" class="text-xs font-black uppercase text-slate-500">USER</p>
+                        <p id="user-name-display" class="text-sm font-bold">---</p>
+                    </div>
+                    <button onclick="logout()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-red-500"><i class="fa-solid fa-power-off"></i></button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-5xl mx-auto py-20 px-8">
+            <div id="menu-utama">
+                <div class="mb-24">
+                    <h2 class="text-6xl font-light text-slate-900">Selamat pagi.<br>Apa tugasan <span class="italic text-slate-400">anda</span> hari ini?</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div onclick="bukaHalaman('dashboard-hem')" class="unit-card p-10 cursor-pointer text-white">
+                        <h4 class="text-3xl font-bold">HAL EHWAL<br>MURID</h4>
+                    </div>
+                    <div onclick="bukaHalaman('dashboard-koku')" class="unit-card p-10 cursor-pointer text-white">
+                        <h4 class="text-3xl font-bold">KOKURIKULUM</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboard-hem" class="hidden-section">
+                <button onclick="kembaliKeMenuUtama()" class="mb-10 text-xs font-black uppercase"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
+                <h2 class="text-4xl font-bold mb-10">Hal Ehwal Murid</h2>
+                <div onclick="bukaSenaraiLaporan()" class="unit-card p-8 cursor-pointer text-white">
+                    <h4 class="text-xl font-bold">Rekod Laporan</h4>
+                </div>
+            </div>
+
+            <div id="dashboard-rekod-laporan" class="hidden-section">
+                <div class="flex justify-between mb-10">
+                    <button onclick="bukaHalaman('dashboard-hem')" class="text-xs font-black uppercase"><i class="fa-solid fa-arrow-left mr-2"></i> HEM</button>
+                    <button onclick="bukaHalaman('submodul-laporan')" class="px-8 py-4 bg-[#0f172a] text-white rounded-2xl font-black">Laporan Baru</button>
+                </div>
+                <div class="bg-white rounded-3xl p-8 overflow-x-auto">
+                    <table class="w-full"><thead><tr class="text-xs font-black uppercase border-b"><th class="pb-4">Minggu</th><th class="pb-4">Tarikh</th><th class="pb-4">Guru</th><th class="pb-4">Status</th></tr></thead><tbody id="tbody-laporan"></tbody></table>
+                </div>
+            </div>
+
+            <div id="submodul-laporan" class="hidden-section max-w-2xl mx-auto">
+                <button onclick="bukaSenaraiLaporan()" class="mb-8 text-xs font-black uppercase"><i class="fa-solid fa-arrow-left mr-2"></i> Rekod</button>
+                <div class="bg-white rounded-3xl p-8 space-y-8">
+                    <form id="formLaporan" class="space-y-8">
+                        <div>
+                            <label class="text-xs font-black uppercase mb-2 block">Minggu</label>
+                            <select id="selectMinggu" class="w-full border-b-2 py-3 font-bold text-2xl outline-none"></select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-black uppercase mb-2 block">Kebersihan</label>
+                            <textarea id="in-kebersihan" class="w-full border-b-2 py-2 outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-xs font-black uppercase mb-2 block">Disiplin</label>
+                            <textarea id="in-disiplin" class="w-full border-b-2 py-2 outline-none"></textarea>
+                        </div>
+                        <button type="button" onclick="prosesBorangHEM()" class="w-full py-5 font-black uppercase rounded-2xl bg-[#0f172a] text-white hover:bg-[#f97316]">Hantar Laporan</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="dashboard-koku" class="hidden-section">
+                <button onclick="kembaliKeMenuUtama()" class="mb-10 text-xs font-black uppercase"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
+                <h2 class="text-4xl font-bold mb-10">Kokurikulum</h2>
+                <div onclick="bukaSenaraiLaporanKoku()" class="unit-card p-8 cursor-pointer text-white">
+                    <h4 class="text-xl font-bold">Laporan Aktiviti</h4>
+                </div>
+            </div>
+
+            <div id="dashboard-rekod-koku" class="hidden-section">
+                <div class="flex justify-between mb-10">
+                    <button onclick="bukaHalaman('dashboard-koku')" class="text-xs font-black uppercase"><i class="fa-solid fa-arrow-left mr-2"></i> KOKU</button>
+                    <button onclick="bukaBorangKoku()" class="px-8 py-4 bg-[#0f172a] text-white rounded-2xl font-black">Laporan Baru</button>
+                </div>
+                <div class="bg-white rounded-3xl p-8 overflow-x-auto">
+                    <table class="w-full"><thead><tr class="text-xs font-black uppercase border-b"><th class="pb-4">Perjumpaan</th><th class="pb-4">Tarikh</th><th class="pb-4">Unit</th><th class="pb-4">Kehadiran</th></tr></thead><tbody id="tbody-koku"></tbody></table>
+                </div>
+            </div>
+
+            <div id="submodul-laporan-koku" class="hidden-section max-w-2xl mx-auto">
+                <button onclick="bukaSenaraiLaporanKoku()" class="mb-8 text-xs font-black uppercase"><i class="fa-solid fa-arrow-left mr-2"></i> Rekod</button>
+                <div class="bg-white rounded-3xl p-8 space-y-8">
+                    <form id="formKoku" class="space-y-8">
+                        <div>
+                            <label class="text-xs font-black uppercase mb-2 block">Perjumpaan</label>
+                            <input type="text" id="k-perjumpaan" class="w-full border-b-2 py-2 outline-none font-bold" value="1">
+                        </div>
+                        <div>
+                            <label class="text-xs font-black uppercase mb-2 block">Tarikh</label>
+                            <input type="date" id="k-tarikh" class="w-full border-b-2 py-2 outline-none font-bold">
+                        </div>
+                        <div>
+                            <label class="text-xs font-black uppercase mb-2 block">Unit</label>
+                            <input type="text" id="k-namaunit" class="w-full border-b-2 py-2 outline-none font-bold">
+                        </div>
+                        <div>
+                            <label class="text-xs font-black uppercase mb-2 block">Aktiviti</label>
+                            <input type="text" id="k-aktiviti" class="w-full border-b-2 py-2 outline-none font-bold">
+                        </div>
+                        <div>
+                            <label class="text-xs font-black uppercase mb-2 block">Laporan</label>
+                            <textarea id="k-laporan" class="w-full border-b-2 py-2 outline-none"></textarea>
+                        </div>
+                        <button type="button" onclick="prosesBorangKoku()" class="w-full py-5 font-black uppercase rounded-2xl bg-[#0f172a] text-white hover:bg-[#f97316]">Simpan Laporan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxhG6B_WJo_-3nk9XQ2bjRCX96mgsNxgkeIOj2Hwp5ZL8vz9T4feWGJRJ5Jps8JpX1h/exec';
+
+        function showLoader(show) { document.getElementById('loading-spinner').classList.toggle('hidden', !show); }
+        
+        async function callApi(action, params = {}) {
+            showLoader(true);
+            const token = localStorage.getItem('core_session_token');
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action, params: { ...params, token } })
+                });
+                const result = await response.json();
+                showLoader(false);
+                if (!result.success) {
+                    if (result.error === 'Session expired') { logout(); return null; }
+                    alert('Error: ' + result.error);
+                    return null;
+                }
+                return result.data;
+            } catch (error) {
+                showLoader(false);
+                alert('API Error: ' + error.message);
+                return null;
+            }
+        }
+
+        // Login
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const res = await callApi('login', { username, password });
+            if (res && res.success && res.token) {
+                localStorage.setItem('core_session_token', res.token);
+                localStorage.setItem('core_user_name', res.user.name);
+                localStorage.setItem('core_user_role', res.user.role);
+                initApp();
+            } else {
+                document.getElementById('login-error').innerText = res?.error || "Login failed";
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        };
+
+        function logout() {
+            localStorage.clear();
+            document.getElementById('app-content').classList.add('hidden');
+            document.getElementById('login-section').classList.remove('hidden');
+            location.reload();
+        }
+
+        async function initApp() {
+            const token = localStorage.getItem('core_session_token');
+            if (!token) return;
+            
+            const userData = await callApi('verifySession', { token });
+            if (!userData || !userData.valid) { logout(); return; }
+            
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('hidden');
+            document.getElementById('user-name-display').innerText = userData.user.name;
+            document.getElementById('user-role-display').innerText = userData.user.role;
+            
+            const takwimData = await callApi('getTakwimData');
+            if (takwimData) {
+                const sel = document.getElementById('selectMinggu');
+                sel.innerHTML = '<option value="">-- Pilih Minggu --</option>';
+                takwimData.data.forEach(r => {
+                    const opt = document.createElement('option');
+                    opt.value = r[0];
+                    opt.text = "Minggu " + r[0];
+                    sel.add(opt);
+                });
+            }
+        }
+
+        function bukaHalaman(id) {
+            ['menu-utama', 'dashboard-hem', 'dashboard-rekod-laporan', 'submodul-laporan', 'dashboard-koku', 'dashboard-rekod-koku', 'submodul-laporan-koku'].forEach(s => {
+                const el = document.getElementById(s);
+                if(el) el.classList.add('hidden-section');
+            });
+            const target = document.getElementById(id);
+            if(target) target.classList.remove('hidden-section');
+        }
+
+        function kembaliKeMenuUtama() { bukaHalaman('menu-utama'); }
+
+        async function bukaSenaraiLaporan() {
+            bukaHalaman('dashboard-rekod-laporan');
+            const tbody = document.getElementById('tbody-laporan');
+            tbody.innerHTML = '<tr><td colspan="4" class="py-10 text-center">Loading...</td></tr>';
+            const data = await callApi('getRekodLaporan');
+            if(!data) return;
+            tbody.innerHTML = '';
+            data.forEach(r => {
+                tbody.innerHTML += `<tr class="border-b"><td class="py-4">M${r.minggu}</td><td>${r.tarikh}</td><td class="font-bold">${r.nama}</td><td><span class="text-xs px-2 py-1 rounded ${r.status === 'HANTAR' ? 'bg-green-100' : 'bg-yellow-100'}">${r.status}</span></td></tr>`;
+            });
+        }
+
+        async function prosesBorangHEM() {
+            const minggu = document.getElementById('selectMinggu').value;
+            if(!minggu) { alert('Pilih minggu'); return; }
+            
+            const data = {
+                minggu: minggu,
+                tarikhPaparan: `Minggu ${minggu}`,
+                statusSubmission: 'HANTAR',
+                isnin: '-', selasa: '-', rabu: '-', khamis: '-', jumaat: '-',
+                kebersihan: document.getElementById('in-kebersihan').value || '-',
+                disiplin: document.getElementById('in-disiplin').value || '-',
+                kantin: '-',
+                images: []
+            };
+            
+            const result = await callApi('simpanLaporan', { data });
+            if(result) {
+                alert('Laporan berjaya disimpan!');
+                bukaSenaraiLaporan();
+            }
+        }
+
+        async function bukaSenaraiLaporanKoku() {
+            bukaHalaman('dashboard-rekod-koku');
+            const tbody = document.getElementById('tbody-koku');
+            tbody.innerHTML = '<tr><td colspan="4" class="py-10 text-center">Loading...</td></tr>';
+            const data = await callApi('getRekodKoku');
+            if(!data || !data.records) return;
+            tbody.innerHTML = '';
+            data.records.forEach(r => {
+                tbody.innerHTML += `<tr class="border-b"><td class="py-4">#${r.perjumpaan}</td><td>${r.tarikh}</td><td class="font-bold">${r.unit}</td><td>${r.kehadiran}</td></tr>`;
+            });
+        }
+
+        function bukaBorangKoku() { bukaHalaman('submodul-laporan-koku'); }
+
+        async function prosesBorangKoku() {
+            const data = {
+                perjumpaan: document.getElementById('k-perjumpaan').value,
+                tarikh: document.getElementById('k-tarikh').value,
+                unit: document.getElementById('k-namaunit').value,
+                kategori: 'Sukan',
+                aktiviti: document.getElementById('k-aktiviti').value,
+                tempat: 'Sekolah',
+                kehadiran: '0/0',
+                laporan: document.getElementById('k-laporan').value,
+                refleksi: '',
+                senaraiNama: '',
+                images: []
+            };
+            
+            const result = await callApi('simpanLaporanKoku', { data });
+            if(result) {
+                alert('Laporan KOKU berjaya disimpan!');
+                bukaSenaraiLaporanKoku();
+            }
+        }
+
+        window.onload = () => {
+            if(localStorage.getItem('core_session_token')) initApp();
+        };
+    </script>
+</body>
+</html>
